@@ -38,46 +38,27 @@ drpgContest.prototype = {
 	},
 	runContest : function(outputLevelOfDetail){
 		var result = 'Contest - '+ new Date();
-		result = result+'\n'+'Player 1:'+this.player1.getName();
-		result = result+'\n'+'Player 1:'+this.player1.getDiceBucket();
-		result = result+'\n'+'Player 1:'+this.player1.getHighestPossibleRoll();
+		var p1name = this.player1.getName();
+		var p2name = this.player2.getName();
+		result = result+'\n'+'Player 1: Setting my name to -> '+this.player1.getName();
+		result = result+'\n'+p1name+': My dice bag has *********************\n'+this.player1.getDiceBucket()+"\n*******************************************";
+		result = result+'\n'+p1name+': My highest possible roll value is '+this.player1.getHighestPossibleRoll();
+		result = result+'\n'+p1name+': A test roll results in -- '+this.player1.rollDiceBucket();
 
-		
-		/*if (player.getHighestPossibleRoll > 4) {
-			for (var i = simulations - 1; i >= 0; i--){
-			  result = result + '/n' + runSimulation();
-			};
-		} else {
-			result = 'You die of exhaustion.';
-		}*/
 		return result;
 	},
-	isPossible : function(){
-		if (maxRollableValue > enemyArmor[0] && maxRollableValue > enemyWounds[0]){return true;} else {return false};		
+	canDefeat : function(playerAttack,playerDefend){
+		if (playerAttack.getHighestPossibleRoll() > playerDefend.getHighestDefenseStat()){return true;} else {return false};		
 	},
-	runSimulation : function(){
-		var diceBucket = [d4s,d6s,d8s,d10s,d12s,d20s];
-		var diceResults =[];
-		var numberOfRolls = 0;
-		var stringOuput = '';
-		var enemyDefense = enemyArmor.concat(enemyWounds);
-			
-			while (enemyDefense.length > 0)
-			{
-				for (dice in diceBucket){
-					
-				}
-			}
-		
-		return stringOutput;		
-	}
 };
 
 function playerEntity(name){
 	this.name = name || 'Leroy Jenkins';
 	this.diceBucket = [];
 	this.armor =['1'];
+	this.currentArmor = ['1'];
 	this.wounds =['1'];
+	this.currentWounds = ['1'];
 }
 
 playerEntity.prototype = {
@@ -92,19 +73,33 @@ playerEntity.prototype = {
 	},
 	getHighestPossibleRoll : function(){
 		var debug;
-		debug = JSON.stringify(_.max(this.diceBucket, function(die){ return die.max; }));
+		debug = (_.max(this.diceBucket, function(die){ return die.max; })).max;
 		return debug;
 	},
 	getDiceBucket : function(){
 		var debug;
-		debug = JSON.stringify(this.diceBucket);
+		debug = JSON.stringify(this.diceBucket, null, "\t");
 		return debug;
+	},
+	rollDiceBucket : function(){
+		var debug = [];
+		for (dieKey in this.diceBucket){
+			debug.push(this.diceBucket[dieKey].roll());
+		}
+		return JSON.stringify(debug.sort(function(a,b){return b-a}));
 	},
 	setArmor : function(armor){
 		this.armor = armor.sort(function(a,b){return b-a}) || [1];
+		this.currentArmor = this.armor;
 	},
 	setWounds : function(wounds){
 		this.wounds = wounds.sort(function(a,b){return b-a}) || [1];
+		this.currentWounds = this.wounds;
+	},
+	getHighestDefenseStat : function (){
+		var debug;
+		debug = _.max(this.armor.concat(this.wounds));
+		return parseInt(debug);
 	}
 };
 
@@ -117,7 +112,7 @@ function dice(diceMax, color){
 
 dice.prototype = {
 	roll: function(){
-		return Math.floor((random()*this.diceMax)+1);
+		return Math.floor((Math.random()*this.max)+1);
 	},
 	getMax: function(){
 		return this.max;
@@ -128,13 +123,15 @@ dice.prototype = {
 };
 
 $('#subCompare').click(function(){
-	var redshirt = new playerEntity('Kirk');
-	var borg = new playerEntity('lacutis');
-	borg.resetDiceTo('1d6');
-	borg.setArmor($('#enemy_armor').val().split(','));
-	borg.setWounds($('#enemy_wounds').val().split(','));
-	redshirt.resetDiceTo($('#dice_set').val());
+	var redshirt = new playerEntity($('#p1_name').val());
+		redshirt.resetDiceTo($('#p1_dice_set').val());
+		redshirt.setArmor($('#p1_armor').val().split(','));
+		redshirt.setWounds($('#p1_wounds').val().split(','));
+	var yellowshirt = new playerEntity($('#p2_name').val());
+		yellowshirt.resetDiceTo($('#p2_dice_set').val());
+		yellowshirt.setArmor($('#p2_armor').val().split(','));
+		yellowshirt.setWounds($('#p2_wounds').val().split(','));
 	
-	var compare = new drpgContest(redshirt,borg);
+	var compare = new drpgContest(redshirt,yellowshirt);
 	$('#output_text').val(compare.runContest());
 });
