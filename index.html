@@ -3,32 +3,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>New Web Project</title>
+        <title>Monte Carlo</title>
     </head>
     <body>
         <div id="wrapper">
 			<header>
-				<h1>Monte Carlo</h1>
-				<h2></h2>
+				<h1>Object Parser</h1>
 			</header>
 			<div id="input">
-					<p>d4: <input type="number" id="count_d4" min="0" max="9"></p>
-					<p>d6: <input type="number" id="count_d6" min="0" max="9"></p>
-					<p>d8: <input type="number" id="count_d8" min="0" max="9"></p>
-					<p>d10: <input type="number" id="count_d10" min="0" max="9"></p>
-					<p>d12: <input type="number" id="count_d12" min="0" max="9"></p>
-					<p>d20: <input type="number" id="count_d20" min="0" max="9"></p>
+					<p>Dice: <input type="text" id="dice_set"></p>
 					<p>Armor: <input type="text" id="enemy_armor"></p>
 					<p>Wounds: <input type="text" id="enemy_wounds"></p>
 					
-					<button id="subCompare" onclick="compare_metadata()">Compare Hierarchies!</button>
+					<button id="subCompare">Run Contest!</button>
 			</div>
-
 			<div id="output">
-				<textarea id="output_text" rows="5" cols="100">Results</textarea>
+				<textarea id="output_text" rows="25" cols="100">Results</textarea>
 			</div>
-
-
 		</div>
 		<script src="js/libs/underscore-min.js"></script>
 		<script src="js/libs/backbone-min.js"></script>
