@@ -17,8 +17,9 @@
 #output {
 	float: left;
 	clear: left;
+	text-align: center;
 }
 #subCompare {
-	float: center;
+	float: left;
 	clear: right;
 }

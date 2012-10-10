@@ -50,6 +50,9 @@ drpgContest.prototype = {
 	canDefeat : function(playerAttack,playerDefend){
 		if (playerAttack.getHighestPossibleRoll() > playerDefend.getHighestDefenseStat()){return true;} else {return false};		
 	},
+	rollAttack : function(playerAttack,playerDefend,count){
+		
+	}
 };
 
 function playerEntity(name){
@@ -100,6 +103,12 @@ playerEntity.prototype = {
 		var debug;
 		debug = _.max(this.armor.concat(this.wounds));
 		return parseInt(debug);
+	},
+	resetCurrentArmor : function(){
+		this.currentArmor = this.armor;
+	},
+	resetCurrentWounds : function(){
+		this.currentWounds = this.wounds;
 	}
 };
 
