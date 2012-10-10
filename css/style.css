@@ -1,3 +1,24 @@
-body {
+#wrapper {
+	width: 600px;
+	float: left;
+	position: relative;
+}
+#player1 {
+	position: relative;
+	float: left;
+	width: 45%;
+}
 
+#player2 {
+	position: relative;
+	float: left;
+	width: 45%;
+}
+#output {
+	float: left;
+	clear: left;
+}
+#subCompare {
+	float: center;
+	clear: right;
 }
