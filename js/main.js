@@ -50,7 +50,12 @@ drpgContest.prototype = {
 	canDefeat : function(playerAttack,playerDefend){
 		if (playerAttack.getHighestPossibleRoll() > playerDefend.getHighestDefenseStat()){return true;} else {return false};		
 	},
-	rollAttack : function(playerAttack,playerDefend,count){
+	rollAttackHighToHigh : function(playerAttack,playerDefend){
+		var p1roll = playerAttack.rollDiceBucket();
+		var p2roll = playerDefend.rollDiceBucket();
+		
+	},
+	rollAttackHighToLow : function(playerAttack,playerDefend){
 		
 	}
 };
