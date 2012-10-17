@@ -119,7 +119,6 @@ playerEntity.prototype = {
 
 function dice(diceMax, color){
 	this.max = diceMax || 6;
-	this.min = 1;
 	this.color = color || 'white';
 	this.name = '1d'+this.max;
 }
