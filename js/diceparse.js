@@ -1,7 +1,10 @@
 /**
  * @author Richard Benson
+ * -require: underscore.js
+ * -require: dice.js
+ * 
  */
-var DiceBox = function(){
+var diceparse = function(){
 	var 	diceSet = [],
 			owner = null,
 			history = [],

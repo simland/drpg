@@ -1,6 +1,15 @@
 /**
  * @author Richard Benson
  */
+
+var DRPG_GLOBAL = {};
+DRPG_GLOBAL['d6'] = new dice([1,2,3,4,5,6]);
+//DRPG_GLOBAL['d6'].init([1,2,3,4,5,6]);
+//DRPG_GLOBAL['d4'] = new dice().init([1,2,3,4]);
+//DRPG_GLOBAL['d8'] = new dice().init([1,2,3,4,5,6,7,8]);
+DRPG_GLOBAL['test'] = DRPG_GLOBAL['d6'].clone();
+DRPG_GLOBAL['test'].replaceSide(6,20);
+
 function diceParse (diceString){
 	var diceString = diceString || '1d6';
 	var diceArray = diceString.split(',');
@@ -17,7 +26,7 @@ function diceParse (diceString){
 		currentDieMax = parseInt(currentDie[1]);
 		dieCount = currentDie[0];
 		for(var i=0,j=dieCount; i<j; i++){
-		  returnedDiceBox.push(new dice(currentDieMax, currentDieColor));
+		  returnedDiceBox.push(new dice(currentDieMax));
 		};
 	}
 
@@ -40,15 +49,16 @@ drpgContest.prototype = {
 		var result = 'Contest - '+ new Date();
 		var p1name = this.player1.getName();
 		var p2name = this.player2.getName();
+		result = result+'\n'+DRPG_GLOBAL['d6'].debug();
+		result = result+'\n'+DRPG_GLOBAL['test'].debug();
 		result = result+'\n'+'Player 1: Setting my name to -> '+this.player1.getName();
-		result = result+'\n'+p1name+': My dice bag has *********************\n'+this.player1.getDiceBucket()+"\n*******************************************";
-		result = result+'\n'+p1name+': My highest possible roll value is '+this.player1.getHighestPossibleRoll();
+		//result = result+'\n'+p1name+': My dice bag has *********************\n'+this.player1.getDiceBucket()+"\n*******************************************";
 		result = result+'\n'+p1name+': A test roll results in -- '+this.player1.rollDiceBucket();
 
 		return result;
 	},
 	canDefeat : function(playerAttack,playerDefend){
-		if (playerAttack.getHighestPossibleRoll() > playerDefend.getHighestDefenseStat()){return true;} else {return false};		
+		if (playerAttack.getHighestPossibleRoll() > playerDefend.getHighestDefenseStat()){return true;} else {return false;};		
 	},
 	rollAttackHighToHigh : function(playerAttack,playerDefend){
 		var p1roll = playerAttack.rollDiceBucket();
@@ -78,11 +88,6 @@ playerEntity.prototype = {
 	},
 	getName : function(){
 		return this.name;
-	},
-	getHighestPossibleRoll : function(){
-		var debug;
-		debug = (_.max(this.diceBucket, function(die){ return die.max; })).max;
-		return debug;
 	},
 	getDiceBucket : function(){
 		var debug;
@@ -114,24 +119,6 @@ playerEntity.prototype = {
 	},
 	resetCurrentWounds : function(){
 		this.currentWounds = this.wounds;
-	}
-};
-
-function dice(diceMax, color){
-	this.max = diceMax || 6;
-	this.color = color || 'white';
-	this.name = '1d'+this.max;
-}
-
-dice.prototype = {
-	roll: function(){
-		return Math.floor((Math.random()*this.max)+1);
-	},
-	getMax: function(){
-		return this.max;
-	},
-	getName: function(){
-		return this.name;
 	}
 };
 
