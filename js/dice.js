@@ -11,7 +11,16 @@ function dice(setupString){
 
 dice.prototype = {
 	init: function(setupString){
-		this.sides = setupString || [1,2,3,4,5,6];
+		var outputAttempt = [];
+		if (_.isArray(setupString)){
+			this.sides = setupString;
+		} else {
+			for (var i=0; i < parseInt(setupString); i++) {
+			  outputAttempt.push(i+1);
+			};
+			this.sides = outputAttempt;
+		}
+		return this;
 	},
 	debug: function(){
 		return JSON.stringify(this);

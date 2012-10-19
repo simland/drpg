@@ -4,11 +4,10 @@
 
 var DRPG_GLOBAL = {};
 DRPG_GLOBAL['d6'] = new dice([1,2,3,4,5,6]);
-//DRPG_GLOBAL['d6'].init([1,2,3,4,5,6]);
-//DRPG_GLOBAL['d4'] = new dice().init([1,2,3,4]);
-//DRPG_GLOBAL['d8'] = new dice().init([1,2,3,4,5,6,7,8]);
-DRPG_GLOBAL['test'] = DRPG_GLOBAL['d6'].clone();
-DRPG_GLOBAL['test'].replaceSide(6,20);
+DRPG_GLOBAL['d4'] = new dice().init([1,2,3,4]);
+DRPG_GLOBAL['d8'] = new dice().init([1,2,3,4,5,6,7,8]);
+DRPG_GLOBAL['d6/20'] = DRPG_GLOBAL['d6'].clone();
+DRPG_GLOBAL['d6/20'].replaceSide(6,20);
 
 function diceParse (diceString){
 	var diceString = diceString || '1d6';
@@ -50,9 +49,9 @@ drpgContest.prototype = {
 		var p1name = this.player1.getName();
 		var p2name = this.player2.getName();
 		result = result+'\n'+DRPG_GLOBAL['d6'].debug();
-		result = result+'\n'+DRPG_GLOBAL['test'].debug();
+		result = result+'\n'+DRPG_GLOBAL['d6/20'].debug();
 		result = result+'\n'+'Player 1: Setting my name to -> '+this.player1.getName();
-		//result = result+'\n'+p1name+': My dice bag has *********************\n'+this.player1.getDiceBucket()+"\n*******************************************";
+		result = result+'\n'+p1name+': My dice bag has *********************\n'+this.player1.getDiceBucket()+"\n*******************************************";
 		result = result+'\n'+p1name+': A test roll results in -- '+this.player1.rollDiceBucket();
 
 		return result;
@@ -91,7 +90,7 @@ playerEntity.prototype = {
 	},
 	getDiceBucket : function(){
 		var debug;
-		debug = JSON.stringify(this.diceBucket, null, "\t");
+		debug = JSON.stringify(this.diceBucket);
 		return debug;
 	},
 	rollDiceBucket : function(){
