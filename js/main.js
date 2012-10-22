@@ -1,5 +1,7 @@
 /**
  * @author Richard Benson
+ * -Require jQuery
+ * -Require underscore
  */
 
 var DRPG_GLOBAL = {};
@@ -9,34 +11,10 @@ DRPG_GLOBAL['d8'] = new dice().init([1,2,3,4,5,6,7,8]);
 DRPG_GLOBAL['d6/20'] = DRPG_GLOBAL['d6'].clone();
 DRPG_GLOBAL['d6/20'].replaceSide(6,20);
 
-function diceParse (diceString){
-	var diceString = diceString || '1d6';
-	var diceArray = diceString.split(',');
-	var dieCount = 1;
-	var currentDieSet = [];
-	var currentDie = [];
-	var currentDieColor = 'white';
-	var currentDieMax = 6;
-	var returnedDiceBox = [];
-	for (dieKey in diceArray){
-		currentDieSet = diceArray[dieKey].split(':');
-		currentDieColor = currentDieSet[1] || 'white';
-		currentDie = currentDieSet[0].split('d');
-		currentDieMax = parseInt(currentDie[1]);
-		dieCount = currentDie[0];
-		for(var i=0,j=dieCount; i<j; i++){
-		  returnedDiceBox.push(new dice(currentDieMax));
-		};
-	}
-
-	return returnedDiceBox;
-}
-
-
 function drpgContest (player1,player2){
 	this.player1 = player1 || new playerEntity['red'];
 	this.player2 = player2 || new playerEntity['blue'];
-	this.simulations = 100;
+	this.simulations = 1;
 	this.result = '';
 }
 
@@ -46,26 +24,38 @@ drpgContest.prototype = {
 	},
 	runContest : function(outputLevelOfDetail){
 		var result = 'Contest - '+ new Date();
-		var p1name = this.player1.getName();
-		var p2name = this.player2.getName();
-		result = result+'\n'+DRPG_GLOBAL['d6'].debug();
-		result = result+'\n'+DRPG_GLOBAL['d6/20'].debug();
-		result = result+'\n'+'Player 1: Setting my name to -> '+this.player1.getName();
-		result = result+'\n'+p1name+': My dice bag has *********************\n'+this.player1.getDiceBucket()+"\n*******************************************";
-		result = result+'\n'+p1name+': A test roll results in -- '+this.player1.rollDiceBucket();
-
+		var p1 = this.player1;
+		var p2 = this.player2;
+		var simCount = this.simulations;
+		var p1wins = 0;
+		result += '\n'+p1.getName()+' vs. '+p2.getName();
+		result += "\n*******************************************";
+		result += '\n'+p1.getName()+': '+p1.debug();
+		result += "\n*******************************************";
+		result += '\n'+p2.getName()+': '+p2.debug();
+		result += "\n*******************************************";
+		
+		while (simCount--){
+			p1.resetCurrentWounds();
+			p2.resetCurrentWounds();
+			console.log('Simulation: '+simCount);
+			while (p1.isAlive() && p2.isAlive()){
+				p1.attackPlayer(p2);
+				if (p2.isAlive()){
+					p2.attackPlayer(p1);
+				}
+			}
+			if (p1.isAlive()){
+				result += '\n'+p1.getName()+' defeated '+p2.getName();
+				p1wins++;
+			}else{
+				result += '\n'+p2.getName()+' defeated '+p1.getName();
+			}
+		}
+		result += "\n*******************************************";
+		result += '\n'+p1.getName()+' wins '+p1wins+' out of '+this.simulations+' simulations';
+		result += "\n*******************************************";
 		return result;
-	},
-	canDefeat : function(playerAttack,playerDefend){
-		if (playerAttack.getHighestPossibleRoll() > playerDefend.getHighestDefenseStat()){return true;} else {return false;};		
-	},
-	rollAttackHighToHigh : function(playerAttack,playerDefend){
-		var p1roll = playerAttack.rollDiceBucket();
-		var p2roll = playerDefend.rollDiceBucket();
-		
-	},
-	rollAttackHighToLow : function(playerAttack,playerDefend){
-		
 	}
 };
 
@@ -73,14 +63,17 @@ drpgContest.prototype = {
 
 $('#subCompare').click(function(){
 	var redshirt = new player($('#p1_name').val());
-		redshirt.resetDiceTo($('#p1_dice_set').val());
-		redshirt.setArmor($('#p1_armor').val().split(','));
-		redshirt.setWounds($('#p1_wounds').val().split(','));
+		redshirt.setMeleeDiceSet($('#p1_dice_set').val());
+		redshirt.setArmorDiceSet($('#p1_armor').val());
+		redshirt.setResistance($('#p1_resistance').val());
+		redshirt.setMaxWounds($('#p1_wounds').val());
 	var yellowshirt = new player($('#p2_name').val());
-		yellowshirt.resetDiceTo($('#p2_dice_set').val());
-		yellowshirt.setArmor($('#p2_armor').val().split(','));
-		yellowshirt.setWounds($('#p2_wounds').val().split(','));
+		yellowshirt.setMeleeDiceSet($('#p2_dice_set').val());
+		yellowshirt.setArmorDiceSet($('#p2_armor').val());
+		yellowshirt.setResistance($('#p2_resistance').val());
+		yellowshirt.setMaxWounds($('#p2_wounds').val());
 	
 	var compare = new drpgContest(redshirt,yellowshirt);
+	compare.setSimulations($('#simulations').val());
 	$('#output_text').val(compare.runContest());
 });

@@ -4,15 +4,15 @@
  * -require: dice.js
  * 
  */
-var diceparse = function(){
-	var 	diceSet = [],
-			owner = null,
-			history = [],
+var diceparse = {
 	
-	roll = function(){
+	getDiceSetFromString = function(inputString){
 		
 	},
-	addDice = function(diceArray){
+	getDiceFromNumber = function(inputNumber){
+		
+	},
+	getDiceStringFromDiceSet = function(inputArray){
 		
 	},
 	

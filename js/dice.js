@@ -3,6 +3,29 @@
  * -Require: underscore.js
  */
 
+function diceParse (diceString){
+	var diceString = diceString || '1d6';
+	var diceArray = diceString.split(',');
+	var dieCount = 1;
+	var currentDieSet = [];
+	var currentDie = [];
+	var currentDieColor = 'white';
+	var currentDieMax = 6;
+	var returnedDiceBox = [];
+	for (dieKey in diceArray){
+		currentDieSet = diceArray[dieKey].split(':');
+		currentDieColor = currentDieSet[1] || 'white';
+		currentDie = currentDieSet[0].split('d');
+		currentDieMax = parseInt(currentDie[1]);
+		dieCount = currentDie[0];
+		for(var i=0,j=dieCount; i<j; i++){
+		  returnedDiceBox.push(new dice(currentDieMax));
+		};
+	}
+
+	return returnedDiceBox;
+}
+
 function dice(setupString){
 	this.sides = [1,2,3,4,5,6];
 	this.name = 'Default';
