@@ -88,9 +88,8 @@ player.prototype = {
 		var myAttack = this.rollAttack();
 		var	theirDefense = target.rollDefense();
 		var	theirResistance = target.getResistance();
-		console.log(this.getName()+' Attacked With: '+JSON.stringify(myAttack));
-		console.log('\t'+target.getName()+' Defended With: '+JSON.stringify(theirDefense)+', with a resistance of '+theirResistance);
-		  	
+		//console.log(this.getName()+' Attacked With: '+JSON.stringify(myAttack));
+		//console.log('\t'+target.getName()+' Defended With: '+JSON.stringify(theirDefense)+', with a resistance of '+theirResistance);  	
 		for (var i=0; i < myAttack.length; i++) {
 			if(myAttack[i] > Math.max(theirDefense[i]||0,theirResistance)){target.takeWounds(1);};
 		};		
