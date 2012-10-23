@@ -45,7 +45,7 @@ drpgContest.prototype = {
 			while (simCount--){
 				p1.resetCurrentWounds();
 				p2.resetCurrentWounds();
-				console.log('Simulation: '+simCount);
+				//console.log('Simulation: '+simCount);
 				while (p1.isAlive() && p2.isAlive()){
 					p1.attackPlayer(p2);
 					if (p2.isAlive()){
@@ -57,20 +57,22 @@ drpgContest.prototype = {
 						
 					}
 			}
-			p1Sample.push(p1wins);
+			p1Sample.push((p1wins/this.simulations));
 		}
 		
-		p1mean = (_.reduce(p1Sample, function(memo, num){ return memo + num; }, 0)/(p1Sample.length))
-		p1stddev = Math.sqrt((1/(iterations-1))*(_.reduce(p1Sample, function(memo, num){ return memo + ((num-p1mean)^2); }, 0)));
+		p1mean = (_.reduce(p1Sample, function(memo, num){ return memo + num; }, 0))/(p1Sample.length);
+		p1stddev = Math.sqrt((1/(iterations-1))*(_.reduce(p1Sample, function(memo, num){ return memo + Math.pow((num-p1mean),2); }, 0)));
 		
 		result += "\n*******************************************";
-		result += '\n'+p1.getName()+' has a probability to win of '+p1mean+'.  With a stdDev of '+p1stddev;
+		result += '\n'+p1.getName()+' has a probability to win of '+formatToPecent(p1mean)+'.  With a stdDev of '+formatToPecent(p1stddev);
 		result += "\n*******************************************";
 		return result;
 	}
 };
 
-
+function formatToPecent(value){
+	return ((Math.round(value*10000))/100)+' %';
+}
 
 $('#subCompare').click(function(){
 	var redshirt = new player($('#p1_name').val());
@@ -86,5 +88,5 @@ $('#subCompare').click(function(){
 	
 	var compare = new drpgContest(redshirt,yellowshirt);
 	compare.setSimulations($('#simulations').val());
-	$('#output_text').val(compare.runContest(30));
+	$('#output_text').val(compare.runContest($('#iterations').val()));
 });
